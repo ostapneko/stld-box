@@ -1,0 +1,28 @@
+- name: checkout rbenv repo
+  git: repo=git://github.com/sstephenson/rbenv.git
+       dest=/home/${user}/.rbenv
+
+- name: checkout ruby-build
+  git: repo=git://github.com/sstephenson/ruby-build.git
+       dest=/home/${user}/.rbenv/plugins/ruby-build
+
+- name: check ruby presence
+  shell: "export RBENV_ROOT=${rbenv_root} RBENV_VERSION=${rbenv_version} && test -e ${rbenv_root}/shims/ruby && ${rbenv_root}/shims/ruby -v | grep ${ruby_version}"
+  register: ruby_present
+  ignore_errors: yes
+
+- name: install ruby ${version}
+  shell: "export RBENV_ROOT=${rbenv_root} && ${rbenv_root}/bin/rbenv install ${rbenv_version}"
+  when_failed: $ruby_present
+
+- name: rbenv rehash
+  shell: "export RBENV_ROOT=${rbenv_root} && ${rbenv_root}/bin/rbenv rehash"
+
+- name: check bundler presence
+  shell: "test -e ${rbenv_root}/shims/bundle"
+  register: bundler_present
+  ignore_errors: true
+
+- name: installl bundler
+  shell: "export RBENV_VERSION=${rbenv_version} && ${rbenv_root}/shims/gem install bundler && ${rbenv_root}/bin/rbenv rehash"
+  when_failed: $bundler_present

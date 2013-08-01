@@ -1,0 +1,16 @@
+---
+- hosts: all
+  sudo: yes
+  roles:
+    - common
+
+- hosts: all
+  sudo_user: stld
+  sudo: yes
+  vars:
+    - user: stld
+    - rbenv_version: 2.0.0-p195
+    - ruby_version: 2.0.0p195
+    - rbenv_root: /home/stld/.rbenv
+  tasks:
+    - include: rbenv.yml
