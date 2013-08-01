@@ -1,4 +1,4 @@
 stld-box
 ========
 
-Provisioning for stld. Uses [Ansible](http://www.ansibleworks.com/docs/).
+Provisioning for [stld](https://github.com/ostapneko/stld). Uses [Ansible](http://www.ansibleworks.com/docs/).
