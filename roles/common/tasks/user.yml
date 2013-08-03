@@ -1,4 +1,0 @@
----
-- name: create a {{ user }} user
-  sudo: yes
-  user: name={{ user }} state=present shell=/bin/bash

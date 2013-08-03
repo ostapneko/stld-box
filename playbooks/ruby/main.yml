@@ -1,0 +1,11 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - include: tasks/dependencies.yml
+
+- hosts: all
+  sudo_user: ${user}
+  sudo: yes
+  tasks:
+    - include: tasks/rbenv.yml

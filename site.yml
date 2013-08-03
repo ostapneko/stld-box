@@ -1,16 +1,14 @@
 ---
 - hosts: all
+  name: create a stld user
   sudo: yes
-  roles:
-    - common
+  user: name=stld state=present shell=/bin/bash
 
-- hosts: all
-  sudo_user: stld
-  sudo: yes
+- include: playbooks/ruby/main.yml
   vars:
-    - user: stld
-    - rbenv_version: 2.0.0-p195
-    - ruby_version: 2.0.0p195
-    - rbenv_root: /home/stld/.rbenv
-  tasks:
-    - include: rbenv.yml
+    user: stld
+    rbenv_version: 2.0.0-p195
+    ruby_version: 2.0.0p195
+    rbenv_root: /home/stld/.rbenv
+
+- include: playbooks/postgres/main.yml

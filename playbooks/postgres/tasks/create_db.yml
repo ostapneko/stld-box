@@ -1,0 +1,9 @@
+---
+- name: Create a PG user
+  postgresql_user: user=${pg_user} password=${pg_password}
+
+- name: Create the database
+  postgresql_db: db=${db_name}
+                 owner=${pg_user}
+                 encoding='UTF-8'
+                 template=template0
