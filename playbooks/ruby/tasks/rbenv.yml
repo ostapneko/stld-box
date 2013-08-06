@@ -1,10 +1,10 @@
 - name: checkout rbenv repo
   git: repo=git://github.com/sstephenson/rbenv.git
-       dest=/home/${user}/.rbenv
+       dest=/home/stld/.rbenv
 
 - name: checkout ruby-build
   git: repo=git://github.com/sstephenson/ruby-build.git
-       dest=/home/${user}/.rbenv/plugins/ruby-build
+       dest=/home/stld/.rbenv/plugins/ruby-build
 
 - name: check ruby presence
   shell: "export RBENV_ROOT=${rbenv_root} RBENV_VERSION=${rbenv_version} && test -e ${rbenv_root}/shims/ruby && ${rbenv_root}/shims/ruby -v | grep ${ruby_version}"

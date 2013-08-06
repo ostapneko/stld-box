@@ -1,0 +1,21 @@
+---
+# Prepare Capistrano-like file structure
+- hosts: all
+  sudo_user: stld
+  sudo: yes
+  tasks:
+  - name: Create a releases directory
+    file: path=/home/stld/apps/stld/releases
+          state=directory
+
+  - name: Create a shared directory
+    file: path=/home/stld/apps/stld/shared/config
+          state=directory
+
+  - name: Copy database.yml
+    copy: src=../../files/database.yml
+          dest=/home/stld/apps/stld/shared/config/database.yml
+
+  - name: Copy unicorn.rb
+    copy: src=../../files/unicorn.rb
+          dest=/home/stld/apps/stld/shared/config/unicorn.rb

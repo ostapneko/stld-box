@@ -5,7 +5,7 @@
   - include: tasks/dependencies.yml
 
 - hosts: all
-  sudo_user: ${user}
+  sudo_user: stld
   sudo: yes
   tasks:
     - include: tasks/rbenv.yml

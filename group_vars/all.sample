@@ -1,3 +1,5 @@
 pg_user: pg_user
 pg_password: pg_password
 db_name: db_name
+pg_dump_dir: /path/to/pg_dump/directory
+branch: git_branch

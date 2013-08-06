@@ -1,0 +1,29 @@
+---
+# Create a Capistrano-like structure
+
+- hosts: all
+  sudo_user: stld
+  sudo: yes
+  tasks:
+  - name: Create a timestamp
+    command: "date +%s"
+    register: timestamp
+
+  - name: Pull from git
+    git: repo=https://github.com/ostapneko/stld
+         dest=/home/stld/apps/stld/releases/${timestamp.stdout}
+
+  - name: Destroy link to previous release
+    file: path=/home/stld/apps/stld/current state=absent
+
+  - name: Link to current release
+    file: path=/home/stld/apps/stld/current state=link
+          src=/home/stld/apps/stld/releases/${timestamp.stdout}
+
+  - name: Link database.yml
+    file: path=/home/stld/apps/stld/current/config/database.yml state=link
+          src=/home/stld/apps/stld/shared/config/database.yml
+
+  - name: Link unicorn.rb
+    file: path=/home/stld/apps/stld/current/config/unicorn.rb state=link
+          src=/home/stld/apps/stld/shared/config/unicorn.rb

@@ -4,11 +4,12 @@
   sudo: yes
   user: name=stld state=present shell=/bin/bash
 
-- include: playbooks/ruby/main.yml
+- include: playbooks/ruby/install.yml
   vars:
-    user: stld
     rbenv_version: 2.0.0-p195
     ruby_version: 2.0.0p195
     rbenv_root: /home/stld/.rbenv
 
-- include: playbooks/postgres/main.yml
+- include: playbooks/postgres/setup_db.yml
+
+- include: playbooks/deployment/prepare.yml

@@ -1,0 +1,8 @@
+---
+- include: playbooks/postgres/backup.yml
+
+- include: playbooks/deployment/synchronize.yml
+
+#- include: playbooks/ruby/sequel_migrations.yml
+#
+#- include: playbooks/ruby/unicorn_restart.yml

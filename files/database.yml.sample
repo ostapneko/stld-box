@@ -1,0 +1,6 @@
+production:
+  host: host
+  port: port
+  database: db_name
+  username: pg_name
+  password: pg_pass
