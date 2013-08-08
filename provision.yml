@@ -2,7 +2,8 @@
 - hosts: all
   name: create a stld user
   sudo: yes
-  user: name=stld state=present shell=/bin/bash
+  tasks:
+  - user: name=stld state=present shell=/bin/bash createhome=yes
 
 - include: playbooks/ruby/install.yml
   vars:
