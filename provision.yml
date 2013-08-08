@@ -6,10 +6,6 @@
   - user: name=stld state=present shell=/bin/bash createhome=yes
 
 - include: playbooks/ruby/install.yml
-  vars:
-    rbenv_version: 2.0.0-p195
-    ruby_version: 2.0.0p195
-    rbenv_root: /home/stld/.rbenv
 
 - include: playbooks/postgres/setup_db.yml
 

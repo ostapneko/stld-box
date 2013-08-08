@@ -1,7 +1,7 @@
 ---
 - include: playbooks/postgres/backup.yml
 
-- include: playbooks/deployment/synchronize.yml
+- include: playbooks/deployment/deploy.yml
 
 #- include: playbooks/ruby/sequel_migrations.yml
 #

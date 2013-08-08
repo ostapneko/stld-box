@@ -14,7 +14,7 @@
          dest=/home/stld/apps/stld/releases/${timestamp.stdout}
 
   - name: Destroy link to previous release
-    file: path=/home/stld/apps/stld/current state=absent
+    file: path=$app_root state=absent
 
   - name: Link to current release
     file: path=/home/stld/apps/stld/current state=link
@@ -27,3 +27,20 @@
   - name: Link unicorn.rb
     file: path=/home/stld/apps/stld/current/config/unicorn.rb state=link
           src=/home/stld/apps/stld/shared/config/unicorn.rb
+
+  - name: Prepare bundle
+    command: echo "export RACK_ENV=${rack_env} RBENV_ROOT=${rbenv_root} RBENV_VERSION=${rbenv_version} && cd ${app_root} && ${rbenv_root}/shims/bundle"
+    register: bundle
+    tags: current
+
+  - name: update bundle
+    shell: ${bundle.stdout}
+    tags: current
+
+  - name: Run sequel migrations
+    shell: "${bundle.stdout} exec ruby script/migrate.rb && echo"
+    tags: current
+
+  #- name: Precompile assets
+
+  #- name: Restart unicorn
