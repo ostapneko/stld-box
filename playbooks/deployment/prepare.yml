@@ -5,17 +5,17 @@
   sudo: yes
   tasks:
   - name: Create a releases directory
-    file: path=/home/stld/apps/stld/releases
+    file: path=${app_root}/releases
           state=directory
 
   - name: Create a shared directory
-    file: path=/home/stld/apps/stld/shared/config
+    file: path=${app_root}/shared/config
           state=directory
 
   - name: Copy database.yml
     copy: src=../../files/database.yml
-          dest=/home/stld/apps/stld/shared/config/database.yml
+          dest=${app_root}/shared/config/database.yml
 
   - name: Copy unicorn.rb
     copy: src=../../files/unicorn.rb
-          dest=/home/stld/apps/stld/shared/config/unicorn.rb
+          dest=${app_root}/shared/config/unicorn.rb

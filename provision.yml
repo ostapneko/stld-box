@@ -1,9 +1,11 @@
 ---
 - hosts: all
-  name: create a stld user
   sudo: yes
   tasks:
-  - user: name=stld state=present shell=/bin/bash createhome=yes
+  - name: Create a stld user
+    user: name=stld state=present shell=/bin/bash createhome=yes
+  - name: Install coffeescript
+    apt: update_cache=yes pkg=coffeescript state=latest
 
 - include: playbooks/ruby/install.yml
 

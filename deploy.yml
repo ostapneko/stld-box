@@ -3,6 +3,4 @@
 
 - include: playbooks/deployment/deploy.yml
 
-#- include: playbooks/ruby/sequel_migrations.yml
-#
 #- include: playbooks/ruby/unicorn_restart.yml

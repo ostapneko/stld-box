@@ -11,36 +11,35 @@
 
   - name: Pull from git
     git: repo=https://github.com/ostapneko/stld
-         dest=/home/stld/apps/stld/releases/${timestamp.stdout}
+         dest=${app_root}/releases/${timestamp.stdout}
 
   - name: Destroy link to previous release
-    file: path=$app_root state=absent
+    file: path=$app_root/current state=absent
 
   - name: Link to current release
-    file: path=/home/stld/apps/stld/current state=link
-          src=/home/stld/apps/stld/releases/${timestamp.stdout}
+    file: path=${app_root}/current state=link
+          src=${app_root}/releases/${timestamp.stdout}
 
   - name: Link database.yml
-    file: path=/home/stld/apps/stld/current/config/database.yml state=link
-          src=/home/stld/apps/stld/shared/config/database.yml
+    file: path=${app_root}/current/config/database.yml state=link
+          src=${app_root}/shared/config/database.yml
 
   - name: Link unicorn.rb
-    file: path=/home/stld/apps/stld/current/config/unicorn.rb state=link
-          src=/home/stld/apps/stld/shared/config/unicorn.rb
-
-  - name: Prepare bundle
-    command: echo "export RACK_ENV=${rack_env} RBENV_ROOT=${rbenv_root} RBENV_VERSION=${rbenv_version} && cd ${app_root} && ${rbenv_root}/shims/bundle"
-    register: bundle
-    tags: current
+    file: path=${app_root}/current/config/unicorn.rb state=link
+          src=${app_root}/shared/config/unicorn.rb
 
   - name: update bundle
-    shell: ${bundle.stdout}
-    tags: current
+    shell: bundle
+           chdir=${app_root}/current
+    environment: $ruby_env
 
   - name: Run sequel migrations
-    shell: "${bundle.stdout} exec ruby script/migrate.rb && echo"
-    tags: current
+    shell: bundle exec ruby script/migrate.rb
+           chdir=${app_root}/current
+    environment: $ruby_env
 
-  #- name: Precompile assets
+  - name: Compile assets
+    shell: /usr/bin/coffee --compile --output public/js public/coffee
+           chdir=${app_root}/current
 
   #- name: Restart unicorn
