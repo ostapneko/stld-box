@@ -1,0 +1,12 @@
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install Nginx
+    apt: update_cache=yes pkg=nginx state=latest
+
+  - name: Start Nginx on boot
+    service: name=nginx state=started enabled=yes
+
+  - name: Copy nginx upstart file
+    copy: src=../../files/nginx.conf
+          dest=/etc/init/nginx.conf
