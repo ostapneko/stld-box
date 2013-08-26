@@ -1,0 +1,7 @@
+---
+- name: Copy Unicorn upstart script
+  template: src=../../../files/etc/init/stld.conf.j2
+            dest=/etc/init/stld.conf
+
+- name: Start Unicorn on boot
+  service: name=stld state=started enabled=yes

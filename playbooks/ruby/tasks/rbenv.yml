@@ -12,7 +12,7 @@
   ignore_errors: yes
   environment: ruby_env
 
-- name: install ruby {{ ruby_env["RBENV_VERSION"] }}
+- name: install ruby
   shell: rbenv install {{ ruby_env["RBENV_VERSION"] }}
   when_failed: $ruby_present
   environment: ruby_env

@@ -4,9 +4,11 @@
   - name: Install Nginx
     apt: update_cache=yes pkg=nginx state=latest
 
-  - name: Start Nginx on boot
-    service: name=nginx state=started enabled=yes
+  - name: Copy stld conf file
+    copy: src=../../files/etc/nginx/sites-available/stld.conf
+          dest=/etc/nginx/sites-available/stld.conf
 
-  - name: Copy nginx upstart file
-    copy: src=../../files/nginx.conf
-          dest=/etc/init/nginx.conf
+  - name: enable stld
+    file: path=/etc/nginx/sites-enabled/stld.conf
+          src=/etc/nginx/sites-available/stld.conf
+          state=link

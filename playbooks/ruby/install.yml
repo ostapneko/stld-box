@@ -8,4 +8,15 @@
   sudo_user: stld
   sudo: yes
   tasks:
-    - include: tasks/rbenv.yml
+  - include: tasks/rbenv.yml
+
+- hosts: all
+  sudo_user: stld
+  sudo: yes
+  tasks:
+  - name: install unicorn
+    shell: gem install unicorn
+    environment: ruby_env
+  - name: rehash
+    shell: rbenv rehash
+    environment: ruby_env

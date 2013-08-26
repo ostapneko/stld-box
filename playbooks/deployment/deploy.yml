@@ -28,6 +28,11 @@
     file: path=${app_root}/current/config/unicorn.rb state=link
           src=${app_root}/shared/config/unicorn.rb
 
+  - name: Link log directory
+    file: path=${app_root}/current/log
+          state=link
+          src=/var/log/stld
+
   - name: update bundle
     shell: bundle
            chdir=${app_root}/current
@@ -42,4 +47,16 @@
     shell: /usr/bin/coffee --compile --output public/js public/coffee
            chdir=${app_root}/current
 
-  #- name: Restart unicorn
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Get unicorn PID
+    command: cat {{ app_root }}/shared/pids/unicorn.pid
+    register: unicorn_pid
+    ignore_errors: true
+  - name: start unicorn
+    command: /sbin/start stld
+    when: unicorn_pid|failed
+  - name: Kill unicorn
+    command: kill {{ unicorn_pid.stdout }}
+    when: unicorn_pid|success

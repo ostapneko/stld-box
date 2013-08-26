@@ -7,10 +7,12 @@
   - name: Install coffeescript
     apt: update_cache=yes pkg=coffeescript state=latest
 
-- include: playbooks/nginx/setup.yml
+- include: playbooks/postgres/setup_db.yml
 
 - include: playbooks/ruby/install.yml
 
-- include: playbooks/postgres/setup_db.yml
+- include: playbooks/nginx/setup.yml
 
 - include: playbooks/deployment/prepare.yml
+
+- include: playbooks/upstart/configure.yml

@@ -8,14 +8,27 @@
     file: path=${app_root}/releases
           state=directory
 
-  - name: Create a shared directory
+  - name: Create a shared config directory
     file: path=${app_root}/shared/config
           state=directory
 
+  - name: Create a shared pids directory
+    file: path=${app_root}/shared/pids
+          state=directory
+
   - name: Copy database.yml
-    copy: src=../../files/database.yml
+    copy: src=../../files/approot/config/database.yml
           dest=${app_root}/shared/config/database.yml
 
   - name: Copy unicorn.rb
-    copy: src=../../files/unicorn.rb
-          dest=${app_root}/shared/config/unicorn.rb
+    template: src=../../files/approot/config/unicorn.rb.j2
+              dest=${app_root}/shared/config/unicorn.rb
+
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Create a log directory
+    file: path=/var/log/stld
+          state=directory
+          owner=stld
+          group=stld

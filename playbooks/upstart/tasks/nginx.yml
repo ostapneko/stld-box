@@ -1,0 +1,7 @@
+---
+- name: Copy nginx upstart file
+  copy: src=../../files/etc/init/nginx.conf
+        dest=/etc/init/nginx.conf
+
+- name: Start Nginx on boot
+  service: name=nginx state=started enabled=yes
