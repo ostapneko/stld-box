@@ -16,7 +16,9 @@
   tasks:
   - name: install unicorn
     shell: gem install unicorn
+           chdir=/home/stld
     environment: ruby_env
   - name: rehash
     shell: rbenv rehash
+           chdir=/home/stld
     environment: ruby_env

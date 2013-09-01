@@ -3,8 +3,10 @@ pg_password: pg_password
 db_name: db_name
 pg_dump_dir: /path/to/pg_dump/directory
 branch: git_branch
-rbenv_version: 2.0.0-p195
-ruby_version: 2.0.0p195
-rbenv_root: /home/stld/.rbenv
 app_root: /home/stld/apps/stld/current
-rack_env: production
+ruby_env:
+  RACK_ENV: production
+  RBENV_ROOT: /home/stld/.rbenv
+  RBENV_VERSION: 2.0.0-p195
+  RUBY_VERSION: 2.0.0p195
+  PATH: /home/stld/.rbenv/shims:/home/stld/.rbenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
