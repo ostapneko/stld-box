@@ -15,7 +15,7 @@
 - name: install ruby
   shell: rbenv install {{ ruby_env["RBENV_VERSION"] }}
          chdir=/home/stld
-  when_failed: $ruby_present
+  when: ruby_present|failed
   environment: ruby_env
 
 - name: rbenv rehash
@@ -33,5 +33,5 @@
 - name: install bundler
   shell: gem install bundler && rbenv rehash
          chdir=/home/stld
-  when_failed: $bundler_present
+  when: bundler_present|failed
   environment: ruby_env
