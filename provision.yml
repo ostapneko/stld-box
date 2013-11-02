@@ -4,15 +4,66 @@
   tasks:
   - name: Create a stld user
     user: name=stld state=present shell=/bin/bash createhome=yes
+
+  - name: Install git
+    apt: update_cache=yes pkg=git-core state=latest
+
+  - name: Install g++
+    apt: update_cache=yes pkg=g++ state=latest
+
   - name: Install coffeescript
     apt: update_cache=yes pkg=coffeescript state=latest
 
-- include: playbooks/postgres/setup_db.yml
+  - name: Install ruby
+    apt: update_cache=yes pkg=ruby1.9.3 state=latest
 
-- include: playbooks/ruby/install.yml
+  - name: Install bundler
+    shell: gem install bundler
 
-- include: playbooks/nginx/setup.yml
+  - name: Install PG and dependencies
+    apt: update_cache=yes pkg=$item state=latest
+    with_items:
+      - postgresql
+      - libpq-dev
+      - python-psycopg2
+
+  - name: Create a PG user
+    sudo_user: postgres
+    postgresql_user: user=${pg_user} password=${pg_password}
+
+  - name: Create the database
+    sudo_user: postgres
+    postgresql_db: db=${db_name}
+                   owner=${pg_user}
+                   encoding='UTF-8'
+                   template=template0
+                   lc_ctype='en_US.UTF-8'
+                   lc_collate='en_US.UTF-8'
+
+  - name: Install Nginx
+    apt: update_cache=yes pkg=nginx state=latest
+
+  - name: Copy stld conf file
+    copy: src=files/etc/nginx/sites-available/stld.conf
+          dest=/etc/nginx/sites-available/stld.conf
+
+  - name: Enable stld
+    file: path=/etc/nginx/sites-enabled/stld.conf
+          src=/etc/nginx/sites-available/stld.conf
+          state=link
+
+  - name: Copy nginx upstart file
+    copy: src=files/etc/init/nginx.conf
+          dest=/etc/init/nginx.conf
+
+  - name: Start Nginx on boot
+    service: name=nginx state=started enabled=yes
+
+  - name: Copy Unicorn upstart script
+    template: src=files/etc/init/stld.conf.j2
+              dest=/etc/init/stld.conf
+
+  - name: Start Unicorn on boot
+    service: name=stld state=started enabled=yes
 
 - include: playbooks/deployment/prepare.yml
-
-- include: playbooks/upstart/configure.yml

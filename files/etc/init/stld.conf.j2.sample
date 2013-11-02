@@ -9,10 +9,6 @@ setuid stld
 setgid stld
 
 script
-  export RACK_ENV={{ ruby_env["RACK_ENV"] }}
-  export RBENV_ROOT={{ ruby_env["RBENV_ROOT"] }}
-  export RBENV_VERSION={{ ruby_env["RBENV_VERSION"] }}
-  export PATH={{ ruby_env["PATH"] }}
   cd {{ app_root }}/current
-  exec unicorn --config-file=${app_root}/current/config/unicorn.rb -E production
+  exec bundle exec unicorn --config-file=${app_root}/current/config/unicorn.rb -E {{ rack_env }}
 end script

@@ -1,6 +1,0 @@
----
-- hosts: all
-  sudo: yes
-  tasks:
-  - include: tasks/unicorn.yml
-  - include: tasks/nginx.yml

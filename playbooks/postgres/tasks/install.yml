@@ -1,8 +1,0 @@
----
-- name: Install PG and dependencies
-  sudo: yes
-  apt: update_cache=yes pkg=$item state=latest
-  with_items:
-    - postgresql
-    - libpq-dev
-    - python-psycopg2

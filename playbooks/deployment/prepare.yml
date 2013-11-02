@@ -24,10 +24,8 @@
     template: src=../../files/approot/config/unicorn.rb.j2
               dest=${app_root}/shared/config/unicorn.rb
 
-- hosts: all
-  sudo: yes
-  tasks:
   - name: Create a log directory
+    sudo_user: root
     file: path=/var/log/stld
           state=directory
           owner=stld

@@ -34,14 +34,12 @@
           src=/var/log/stld
 
   - name: update bundle
-    shell: bundle
+    shell: bundle --path ../shared/vendor/bundle
            chdir=${app_root}/current
-    environment: $ruby_env
 
   - name: Run sequel migrations
-    shell: bundle exec ruby script/migrate.rb
+    shell: RACK_ENV=${rack_env} bundle exec ruby script/migrate.rb
            chdir=${app_root}/current
-    environment: $ruby_env
 
   - name: Compile assets
     shell: /usr/bin/coffee --compile --output public/js public/coffee
