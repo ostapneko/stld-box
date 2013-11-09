@@ -5,24 +5,24 @@
   sudo: yes
   tasks:
   - name: Create a releases directory
-    file: path=${app_root}/releases
+    file: path=/home/${stld_user}/apps/stld/releases
           state=directory
 
   - name: Create a shared config directory
-    file: path=${app_root}/shared/config
+    file: path=/home/${stld_user}/apps/stld/shared/config
           state=directory
 
   - name: Create a shared pids directory
-    file: path=${app_root}/shared/pids
+    file: path=/home/${stld_user}/apps/stld/shared/pids
           state=directory
 
   - name: Copy database.yml
-    copy: src=../../files/approot/config/database.yml
-          dest=${app_root}/shared/config/database.yml
+    template: src=../../files/approot/config/database.yml.j2
+              dest=/home/${stld_user}/apps/stld/shared/config/database.yml
 
   - name: Copy unicorn.rb
     template: src=../../files/approot/config/unicorn.rb.j2
-              dest=${app_root}/shared/config/unicorn.rb
+              dest=/home/${stld_user}/apps/stld/shared/config/unicorn.rb
 
   - name: Create a log directory
     sudo_user: root
@@ -30,3 +30,23 @@
           state=directory
           owner=stld
           group=stld
+
+- hosts: development
+  sudo: yes
+  sudo_user: ${stld_user}
+  tasks:
+  - name: Pull from git
+    git: repo=https://github.com/ostapneko/stld
+         dest=/home/${stld_user}/apps/stld/workspace
+
+  - name: Link to current release
+    file: path=/home/${stld_user}/apps/stld/current state=link
+          src=/home/${stld_user}/apps/stld/workspace
+
+  - include: tasks/links.yml
+
+  - include: tasks/update_app.yml
+
+  - name: Run sequel migrations
+    shell: RACK_ENV=test bundle exec ruby script/migrate.rb
+           chdir=/home/${stld_user}/apps/stld/current

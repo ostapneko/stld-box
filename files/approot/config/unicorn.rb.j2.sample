@@ -1,7 +1,7 @@
 # set path to app that will be used to configure unicorn
 
 worker_processes 1
-working_directory "{{ app_root }}/current"
+working_directory "/home/{{ stld_user }}/apps/stld/current"
 
 timeout 10
 
@@ -9,7 +9,7 @@ timeout 10
 listen "/tmp/stld_unicorn.sock", :backlog => 64
 
 # Set process id path
-pid "{{ app_root }}/shared/pids/unicorn.pid"
+pid "/home/{{ stld_user }}/apps/stld/shared/pids/unicorn.pid"
 
 # Set log file paths
 stderr_path "/var/log/stld/unicorn.stderr.log"

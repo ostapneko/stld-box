@@ -11,45 +11,24 @@
 
   - name: Pull from git
     git: repo=https://github.com/ostapneko/stld
-         dest=${app_root}/releases/${timestamp.stdout}
+         dest=/home/${stld_user}/apps/stld/releases/${timestamp.stdout}
 
   - name: Destroy link to previous release
-    file: path=$app_root/current state=absent
+    file: path=/home/${stld_user}/apps/stld/current state=absent
 
   - name: Link to current release
-    file: path=${app_root}/current state=link
-          src=${app_root}/releases/${timestamp.stdout}
+    file: path=/home/${stld_user}/apps/stld/current state=link
+          src=/home/${stld_user}/apps/stld/releases/${timestamp.stdout}
 
-  - name: Link database.yml
-    file: path=${app_root}/current/config/database.yml state=link
-          src=${app_root}/shared/config/database.yml
+  - include: tasks/links.yml
 
-  - name: Link unicorn.rb
-    file: path=${app_root}/current/config/unicorn.rb state=link
-          src=${app_root}/shared/config/unicorn.rb
-
-  - name: Link log directory
-    file: path=${app_root}/current/log
-          state=link
-          src=/var/log/stld
-
-  - name: update bundle
-    shell: bundle --path ../shared/vendor/bundle
-           chdir=${app_root}/current
-
-  - name: Run sequel migrations
-    shell: RACK_ENV=${rack_env} bundle exec ruby script/migrate.rb
-           chdir=${app_root}/current
-
-  - name: Compile assets
-    shell: /usr/bin/coffee --compile --output public/js public/coffee
-           chdir=${app_root}/current
+  - include: tasks/update_app.yml
 
 - hosts: all
   sudo: yes
   tasks:
   - name: Get unicorn PID
-    command: cat {{ app_root }}/shared/pids/unicorn.pid
+    command: cat /home/${stld_user}/apps/stld/shared/pids/unicorn.pid
     register: unicorn_pid
     ignore_errors: true
   - name: start unicorn

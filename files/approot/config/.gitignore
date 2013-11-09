@@ -1,2 +1,2 @@
-database.yml
+database.yml.j2
 unicorn.rb.j2
