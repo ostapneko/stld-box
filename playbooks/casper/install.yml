@@ -1,0 +1,40 @@
+---
+- hosts: development
+  sudo_user: root
+  sudo: yes
+  tasks:
+  - name: Download phantomjs
+    get_url: url=https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2
+             dest=/tmp/phantomjs.tar.bz2
+
+  - name: Unzip phantomjs
+    shell: tar -xjf phantomjs.tar.bz2
+           chdir=/tmp/
+           creates=phantomjs-1.9.2-linux-x86_64
+
+  - name: Copy phantomjs to opt
+    shell: cp -R /tmp/phantomjs-1.9.2-linux-x86_64 /opt/phantomjs
+           creates=/opt/phantomjs
+
+  - name: Link phantomjs
+    file: path=/usr/local/bin/phantomjs
+          src=/opt/phantomjs/bin/phantomjs
+          state=link
+
+  - name: Download casperjs
+    get_url: url=https://github.com/n1k0/casperjs/tarball/1.0.3
+             dest=/tmp/casperjs-1.0.3.tar.gz
+
+  - name: Unzip casperjs
+    shell: tar -xzf casperjs-1.0.3.tar.gz
+           chdir=/tmp/
+           creates=n1k0-casperjs-76fc831
+
+  - name: Copy casperjs to opt
+    shell: cp -R /tmp/n1k0-casperjs-76fc831 /opt/casperjs
+           creates=/opt/casperjs
+
+  - name: Link casperjs
+    file: path=/usr/local/bin/casperjs
+          src=/opt/casperjs/bin/casperjs
+          state=link

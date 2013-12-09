@@ -80,6 +80,8 @@
   - name: reload nginx
     service: name=nginx state=reloaded
 
+- include: playbooks/casper/install.yml
+
 - include: playbooks/deployment/prepare.yml
 
 - hosts: development
