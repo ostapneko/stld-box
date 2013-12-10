@@ -22,16 +22,16 @@
           state=link
 
   - name: Download casperjs
-    get_url: url=https://github.com/n1k0/casperjs/tarball/1.0.3
-             dest=/tmp/casperjs-1.0.3.tar.gz
+    get_url: url=https://github.com/n1k0/casperjs/tarball/1.1-beta3
+           dest=/tmp/casperjs-1.1-beta3
 
   - name: Unzip casperjs
-    shell: tar -xzf casperjs-1.0.3.tar.gz
+    shell: tar -xzf casperjs-1.1-beta3
            chdir=/tmp/
-           creates=n1k0-casperjs-76fc831
+           creates=n1k0-casperjs-4f105a9
 
   - name: Copy casperjs to opt
-    shell: cp -R /tmp/n1k0-casperjs-76fc831 /opt/casperjs
+    shell: cp -R /tmp/n1k0-casperjs-4f105a9 /opt/casperjs
            creates=/opt/casperjs
 
   - name: Link casperjs
