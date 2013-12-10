@@ -1,0 +1,56 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install Nginx
+    apt: update_cache=yes pkg=nginx state=latest
+
+  - name: Copy stld conf file
+    copy: src=files/stld.conf
+          dest=/etc/nginx/sites-available/stld.conf
+    notify:
+      - reload nginx
+
+  - name: Enable stld
+    file: path=/etc/nginx/sites-enabled/stld.conf
+          src=/etc/nginx/sites-available/stld.conf
+          state=link
+
+  - name: Copy nginx upstart file
+    copy: src=files/nginx.conf
+          dest=/etc/init/nginx.conf
+    notify:
+      - reload nginx
+
+  - name: Delete default Nginx website
+    file: path=/etc/nginx/sites-enabled/default
+          state=absent
+    notify:
+      - reload nginx
+
+  - name: Start Nginx on boot
+    service: name=nginx state=started enabled=yes
+
+  handlers:
+  - name: reload nginx
+    service: name=nginx state=reloaded
+
+- hosts: development
+  sudo: yes
+  tasks:
+  - name: Copy nginx file for test-stld
+    copy: src=files/test-stld.conf
+          dest=/etc/nginx/sites-available/test-stld.conf
+    notify:
+      - reload nginx
+
+  - name: Enable test-stld
+    file: path=/etc/nginx/sites-enabled/test-stld.conf
+          src=/etc/nginx/sites-available/test-stld.conf
+          state=link
+    notify:
+      - reload nginx
+
+  handlers:
+  - name: reload nginx
+    service: name=nginx state=reloaded
