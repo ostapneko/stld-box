@@ -8,8 +8,8 @@ server {
         keepalive_timeout 5;
 
         location / {
-                alias /home/stld/apps/stld/current/public;
-                try_files $uri @app;
+                root /home/stld/apps/stld/current/public/app;
+                try_files $uri $uri/ @app;
         }
 
         location @app {
