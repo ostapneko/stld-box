@@ -1,12 +1,12 @@
 ---
 - name: update bundle
   shell: bundle --path ../shared/vendor/bundle
-         chdir=/home/${stld_user}/apps/stld/current
+         chdir=/home/${stld_user}/apps/{{stld_user}}/current
 
 - name: Run sequel migrations
   shell: RACK_ENV=${rack_env} bundle exec ruby script/migrate.rb
-         chdir=/home/${stld_user}/apps/stld/current
+         chdir=/home/${stld_user}/apps/{{stld_user}}/current
 
-- name: Compile assets
-  shell: /usr/bin/coffee --compile --output public/js public/coffee
-         chdir=/home/${stld_user}/apps/stld/current
+- name: Make
+  shell: make
+         chdir=/home/${stld_user}/apps/{{stld_user}}/current

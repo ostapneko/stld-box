@@ -2,7 +2,7 @@
 # Create a Capistrano-like structure
 
 - hosts: all
-  sudo_user: stld
+  sudo_user: ${stld_user}
   sudo: yes
   tasks:
   - name: Create a timestamp
@@ -11,14 +11,14 @@
 
   - name: Pull from git
     git: repo=https://github.com/ostapneko/stld
-         dest=/home/${stld_user}/apps/stld/releases/${timestamp.stdout}
+         dest=/home/${stld_user}/apps/{{stld_user}}/releases/${timestamp.stdout}
 
   - name: Destroy link to previous release
-    file: path=/home/${stld_user}/apps/stld/current state=absent
+    file: path=/home/${stld_user}/apps/{{stld_user}}/current state=absent
 
   - name: Link to current release
-    file: path=/home/${stld_user}/apps/stld/current state=link
-          src=/home/${stld_user}/apps/stld/releases/${timestamp.stdout}
+    file: path=/home/${stld_user}/apps/{{stld_user}}/current state=link
+          src=/home/${stld_user}/apps/{{stld_user}}/releases/${timestamp.stdout}
 
   - include: tasks/links.yml
 
@@ -28,11 +28,11 @@
   sudo: yes
   tasks:
   - name: Get unicorn PID
-    command: cat /home/${stld_user}/apps/stld/shared/pids/unicorn.pid
+    command: cat /home/${stld_user}/apps/{{stld_user}}/shared/pids/unicorn.pid
     register: unicorn_pid
     ignore_errors: true
   - name: start unicorn
-    command: /sbin/start stld
+    command: /sbin/start {{stld_user}}
     when: unicorn_pid|failed
   - name: Kill unicorn
     command: kill {{ unicorn_pid.stdout }}

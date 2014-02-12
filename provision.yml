@@ -3,7 +3,7 @@
   sudo: yes
   tasks:
   - name: Create a stld user
-    user: name=stld state=present shell=/bin/bash createhome=yes
+    user: name={{ stld_user }} state=present shell=/bin/bash createhome=yes
 
   - name: Install git
     apt: update_cache=yes pkg=git-core state=latest
@@ -16,6 +16,9 @@
 
   - name: Install ruby
     apt: update_cache=yes pkg=ruby1.9.3 state=latest
+
+  - name: Install unzip
+    apt: update_cache=yes pkg=unzip state=latest
 
   - name: Install bundler
     shell: gem install bundler
@@ -42,10 +45,10 @@
 
   - name: Copy Unicorn upstart script
     template: src=files/etc/init/stld.conf.j2
-              dest=/etc/init/stld.conf
+              dest=/etc/init/${stld_user}.conf
 
   - name: Start Unicorn on boot
-    service: name=stld state=started enabled=yes
+    service: name={{ stld_user }} state=started enabled=yes
 
 - include: playbooks/nginx/setup.yml
 
@@ -58,7 +61,7 @@
   tasks:
   - name: Create the test database
     sudo_user: postgres
-    postgresql_db: db=stld-test
+    postgresql_db: db={{ stld_user }}-test
                    owner=${pg_user}
                    encoding='UTF-8'
                    template=template0
