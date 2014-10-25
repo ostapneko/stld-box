@@ -2,8 +2,12 @@
 # Create a Capistrano-like structure
 
 - hosts: all
-  sudo_user: ${stld_user}
+  sudo_user: "{{ stld_user }}"
   sudo: yes
+  vars:
+    - current_dir: "{{ app_root }}/current"
+    - current_config: "{{ current_dir }}/config"
+    - shared_config: "{{ app_root }}/shared/config"
   tasks:
   - name: Create a timestamp
     command: "date +%s"
@@ -11,14 +15,15 @@
 
   - name: Pull from git
     git: repo=https://github.com/ostapneko/stld
-         dest=/home/${stld_user}/apps/{{stld_user}}/releases/${timestamp.stdout}
+         version="{{ app_rev }}"
+         dest="{{ app_root }}/releases/{{ timestamp.stdout }}"
 
   - name: Destroy link to previous release
-    file: path=/home/${stld_user}/apps/{{stld_user}}/current state=absent
+    file: path="{{ current_dir }}" state=absent
 
   - name: Link to current release
-    file: path=/home/${stld_user}/apps/{{stld_user}}/current state=link
-          src=/home/${stld_user}/apps/{{stld_user}}/releases/${timestamp.stdout}
+    file: path="{{ current_dir }}" state=link
+          src="{{ app_root }}/releases/{{ timestamp.stdout }}"
 
   - include: tasks/links.yml
 
@@ -28,12 +33,12 @@
   sudo: yes
   tasks:
   - name: Get unicorn PID
-    command: cat /home/${stld_user}/apps/{{stld_user}}/shared/pids/unicorn.pid
+    command: cat "{{ app_root }}/shared/pids/unicorn.pid"
     register: unicorn_pid
     ignore_errors: true
   - name: start unicorn
-    command: /sbin/start {{stld_user}}
+    command: /sbin/start "{{ stld_user }}"
     when: unicorn_pid|failed
   - name: Kill unicorn
-    command: kill {{ unicorn_pid.stdout }}
+    command: kill "{{ unicorn_pid.stdout }}"
     when: unicorn_pid|success

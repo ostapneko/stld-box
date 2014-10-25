@@ -1,14 +1,14 @@
 upstream unicorn_server_{{stld_user}} {
-        server unix:tmp/stld_unicorn_{{stld_user}}.sock
+        server unix:/tmp/{{ stld_user }}_unicorn.sock
                 fail_timeout=0;
 }
 
 server {
-        server_name {{ servername }};
+        server_name {{ stld_hostname }};
         keepalive_timeout 5;
 
         location / {
-                root /home/{{stld_user}}/apps/{{stld_user}}/current/public/app;
+                root {{app_root}}/current/public/app;
                 try_files $uri $uri/ @app;
         }
 

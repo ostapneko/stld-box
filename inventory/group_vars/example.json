@@ -1,0 +1,16 @@
+{
+  "stld_user": "stld_user",
+  "db_host": "localhost",
+  "pg_user": "pg_user",
+  "pg_password": "pg_pass",
+  "db_name": "db_name",
+  "db_port": "db_port",
+  "rack_env": "production",
+  "app_root": "/home/stld_usre",
+  "pg_dump_dir": "local/path/to/backup",
+  "stld_hostname": "www.example.com",
+  "http_password": "pass",
+  "http_username": "user",
+  "app_rev": "master"
+}
+

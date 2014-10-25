@@ -3,28 +3,34 @@
   sudo: yes
   tasks:
   - name: Create a stld user
-    user: name={{ stld_user }} state=present shell=/bin/bash createhome=yes
+    user: name="{{ stld_user }}" state=present shell=/bin/bash createhome=yes
+
+  - name: Update apt repos
+    apt: update_cache=yes cache_valid_time=86400
 
   - name: Install git
-    apt: update_cache=yes pkg=git-core state=latest
+    apt: pkg=git-core state=latest
 
   - name: Install g++
-    apt: update_cache=yes pkg=g++ state=latest
+    apt: pkg=g++ state=latest
 
   - name: Install coffeescript
-    apt: update_cache=yes pkg=coffeescript state=latest
+    apt: pkg=coffeescript state=latest
 
   - name: Install ruby
-    apt: update_cache=yes pkg=ruby1.9.3 state=latest
+    apt: pkg=ruby1.9.3 state=latest
 
   - name: Install unzip
-    apt: update_cache=yes pkg=unzip state=latest
+    apt: pkg=unzip state=latest
+
+  - name: Install Make
+    apt: pkg=make state=latest
 
   - name: Install bundler
     shell: gem install bundler
 
   - name: Install PG and dependencies
-    apt: update_cache=yes pkg=$item state=latest
+    apt: update_cache=yes pkg={{ item }} state=latest
     with_items:
       - postgresql
       - libpq-dev
@@ -32,12 +38,12 @@
 
   - name: Create a PG user
     sudo_user: postgres
-    postgresql_user: user=${pg_user} password=${pg_password}
+    postgresql_user: user={{ pg_user }} password={{ pg_password }}
 
   - name: Create the database
     sudo_user: postgres
-    postgresql_db: db=${db_name}
-                   owner=${pg_user}
+    postgresql_db: db={{db_name}}
+                   owner={{pg_user}}
                    encoding='UTF-8'
                    template=template0
                    lc_ctype='en_US.UTF-8'
@@ -45,7 +51,7 @@
 
   - name: Copy Unicorn upstart script
     template: src=files/etc/init/stld.conf.j2
-              dest=/etc/init/${stld_user}.conf
+              dest=/etc/init/{{ stld_user }}.conf
 
   - name: Start Unicorn on boot
     service: name={{ stld_user }} state=started enabled=yes
@@ -62,7 +68,7 @@
   - name: Create the test database
     sudo_user: postgres
     postgresql_db: db={{ stld_user }}-test
-                   owner=${pg_user}
+                   owner={{ pg_user }}
                    encoding='UTF-8'
                    template=template0
                    lc_ctype='en_US.UTF-8'

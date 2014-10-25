@@ -1,12 +1,12 @@
 ---
 - name: update bundle
   shell: bundle --path ../shared/vendor/bundle
-         chdir=/home/${stld_user}/apps/{{stld_user}}/current
+         chdir="{{ current_dir }}"
 
 - name: Run sequel migrations
-  shell: RACK_ENV=${rack_env} bundle exec ruby script/migrate.rb
-         chdir=/home/${stld_user}/apps/{{stld_user}}/current
+  shell: RACK_ENV={{rack_env}} bundle exec ruby script/migrate.rb
+         chdir="{{ current_dir }}"
 
 - name: Make
   shell: make
-         chdir=/home/${stld_user}/apps/{{stld_user}}/current
+         chdir="{{ current_dir }}"

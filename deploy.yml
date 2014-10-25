@@ -1,4 +1,3 @@
 ---
 - include: playbooks/postgres/backup.yml
-
 - include: playbooks/deployment/deploy.yml

@@ -8,12 +8,12 @@
     register: timestamp
 
   - name: Create a dump file
-    command: "pg_dump ${db_name} -f /tmp/${db_name}-backup-${timestamp.stdout}"
+    command: "pg_dump {{ db_name }} -f /tmp/{{ db_name }}-backup-{{ timestamp.stdout }}"
 
   - name: Compress dump file
-    command: "tar cjf /tmp/${db_name}-backup-${timestamp.stdout}.tar.bz2 /tmp/${db_name}-backup-${timestamp.stdout}"
+    command: "tar cjf /tmp/{{ db_name }}-backup-{{ timestamp.stdout }}.tar.bz2 /tmp/{{ db_name }}-backup-{{ timestamp.stdout }}"
 
-  - name: Fetch archived dump filee
-    fetch: src=/tmp/${db_name}-backup-${timestamp.stdout}.tar.bz2
-           dest=${pg_dump_dir}/${db_name}-backup-${timestamp.stdout}.tar.bz2
+  - name: Fetch archived dump file
+    fetch: src="/tmp/{{ db_name }}-backup-{{ timestamp.stdout }}.tar.bz2"
+           dest="{{ pg_dump_dir }}/{{ db_name }}-backup-{{ timestamp.stdout }}.tar.bz2"
            flat=yes

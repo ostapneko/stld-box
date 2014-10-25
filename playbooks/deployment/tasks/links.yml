@@ -1,13 +1,13 @@
 ---
 - name: Link database.yml
-  file: path=/home/${stld_user}/apps/{{stld_user}}/current/config/database.yml state=link
-        src=/home/${stld_user}/apps/{{stld_user}}/shared/config/database.yml
+  file: path={{ current_config }}/database.yml state=link
+        src="{{ shared_config }}/database.yml"
 
 - name: Link unicorn.rb
-  file: path=/home/${stld_user}/apps/{{stld_user}}/current/config/unicorn.rb state=link
-        src=/home/${stld_user}/apps/{{stld_user}}/shared/config/unicorn.rb
+  file: path="{{ current_config }}/unicorn.rb" state=link
+        src="{{ shared_config }}/unicorn.rb"
 
 - name: Link log directory
-  file: path=/home/${stld_user}/apps/{{stld_user}}/current/log
+  file: path="{{ app_root }}/current/log"
         state=link
         src=/var/log/{{stld_user}}

@@ -1,52 +1,38 @@
 ---
 # Prepare Capistrano-like file structure
 - hosts: all
-  sudo_user: ${stld_user}
+  sudo_user: "{{ stld_user }}"
   sudo: yes
+  vars:
+    - shared_config: "{{ app_root }}/shared/config"
   tasks:
+  - name: Create the app root
+    file: path="{{app_root}}"
+          state=directory
+
   - name: Create a releases directory
-    file: path=/home/${stld_user}/apps/{{stld_user}}/releases
+    file: path="{{ app_root }}/releases"
           state=directory
 
   - name: Create a shared config directory
-    file: path=/home/${stld_user}/apps/{{stld_user}}/shared/config
+    file: path="{{ shared_config }}"
           state=directory
 
   - name: Create a shared pids directory
-    file: path=/home/${stld_user}/apps/{{stld_user}}/shared/pids
+    file: path="{{ app_root }}/shared/pids"
           state=directory
 
   - name: Copy database.yml
     template: src=../../files/approot/config/database.yml.j2
-              dest=/home/${stld_user}/apps/{{stld_user}}/shared/config/database.yml
+              dest="{{ shared_config }}/database.yml"
 
   - name: Copy unicorn.rb
     template: src=../../files/approot/config/unicorn.rb.j2
-              dest=/home/${stld_user}/apps/{{stld_user}}/shared/config/unicorn.rb
+              dest="{{ shared_config }}/unicorn.rb"
 
   - name: Create a log directory
     sudo_user: root
-    file: path=/var/log/{{stld_user}}
+    file: path=/var/log/{{ stld_user }}
           state=directory
-          owner={{stld_user}}
-          group={{stld_user}}
-
-- hosts: development
-  sudo: yes
-  sudo_user: ${stld_user}
-  tasks:
-  - name: Pull from git
-    git: repo=https://github.com/ostapneko/{{stld_user}}
-         dest=/home/${stld_user}/apps/{{stld_user}}/workspace
-
-  - name: Link to current release
-    file: path=/home/${stld_user}/apps/{{stld_user}}/current state=link
-          src=/home/${stld_user}/apps/{{stld_user}}/workspace
-
-  - include: tasks/links.yml
-
-  - include: tasks/update_app.yml
-
-  - name: Run sequel migrations
-    shell: RACK_ENV=test bundle exec ruby script/migrate.rb
-           chdir=/home/${stld_user}/apps/{{stld_user}}/current
+          owner={{ stld_user }}
+          group={{ stld_user }}
