@@ -46,8 +46,6 @@
                    owner={{pg_user}}
                    encoding='UTF-8'
                    template=template0
-                   lc_ctype='en_US.UTF-8'
-                   lc_collate='en_US.UTF-8'
 
   - name: Copy Unicorn upstart script
     template: src=files/etc/init/stld.conf.j2
@@ -61,15 +59,3 @@
 - include: playbooks/casper/install.yml
 
 - include: playbooks/deployment/prepare.yml
-
-- hosts: development
-  sudo: yes
-  tasks:
-  - name: Create the test database
-    sudo_user: postgres
-    postgresql_db: db={{ stld_user }}-test
-                   owner={{ pg_user }}
-                   encoding='UTF-8'
-                   template=template0
-                   lc_ctype='en_US.UTF-8'
-                   lc_collate='en_US.UTF-8'

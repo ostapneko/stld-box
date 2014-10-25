@@ -7,6 +7,9 @@ server {
         server_name {{ stld_hostname }};
         keepalive_timeout 5;
 
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/{{stld_hostname}}_htpasswd;
+
         location / {
                 root {{app_root}}/current/public/app;
                 try_files $uri $uri/ @app;

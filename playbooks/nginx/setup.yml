@@ -1,26 +1,31 @@
 ---
 - hosts: all
   sudo: yes
+  tags: nginx
   tasks:
   - name: Install Nginx
     apt: update_cache=yes pkg=nginx state=latest
 
+  - name: Create htpasswd entry
+    notify: reload nginx
+    htpasswd: name={{http_username}}
+              path="/etc/nginx/{{stld_hostname}}_htpasswd"
+              password="{{http_password}}"
+    when: http_password is defined
+
   - name: Copy stld conf file
     template: src=files/stld.conf.j2
               dest=/etc/nginx/sites-available/{{stld_user}}.conf
-    notify:
-      - reload nginx
+    notify: reload nginx
+
+  - name: Install passlib
+    apt: pkg=python-passlib state=latest
+    when: http_password is defined
 
   - name: Enable stld
     file: path=/etc/nginx/sites-enabled/{{stld_user}}.conf
           src=/etc/nginx/sites-available/{{stld_user}}.conf
           state=link
-
-  - name: Copy nginx upstart file
-    template: src=files/nginx.conf.j2
-              dest=/etc/init/nginx.conf
-    notify:
-      - reload nginx
 
   - name: Delete default Nginx website
     file: path=/etc/nginx/sites-enabled/default
